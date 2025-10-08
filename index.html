@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Fire Shop [BETA]</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#0b0c1b,#1a1f35);color:#fff;text-align:center;padding:20px;min-height:100vh;}
+h1{font-size:3.2em;color:#ffb400;text-shadow:0 0 15px #ffb400;}
+.subtitle{font-size:1.3em;color:#ccc;margin-bottom:40px;}
+h2{color:#ffb400;font-size:2em;margin-top:40px;}
+.shop{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px;justify-content:center;margin-top:25px;}
+.card{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:25px;padding:35px;box-shadow:0 0 25px rgba(0,0,0,0.3);transition:0.3s;font-size:1.6em;}
+.card:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(255,180,0,0.5);}
+.card h3{color:#ffb400;font-size:1.8em;margin-bottom:15px;}
+.card p{color:#ddd;margin-bottom:20px;font-size:1.2em;}
+.card button{background:#ffb400;color:#000;font-weight:bold;border:none;border-radius:15px;padding:20px 40px;cursor:pointer;font-size:1.2em;transition:0.3s;}
+.card button:hover{background:#ffd36b;transform:scale(1.1);}
+input{width:80%;padding:15px;border:none;border-radius:10px;text-align:center;margin-top:15px;font-size:1.2em;outline:none;}
+button.verificar{margin-top:15px;background:#ffb400;border:none;padding:15px 35px;border-radius:15px;color:#000;font-weight:bold;font-size:1.3em;cursor:pointer;}
+.message{margin-top:15px;font-weight:bold;font-size:1.3em;}
+.key-ok{color:#00ff9d;}
+.key-error{color:#ff5e5e;}
+.hidden{display:none;}
+.no{color:#ff5e5e;font-style:italic;}
+#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);color:#ffb400;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:2em;z-index:9999;display:none;}
+.loader{border:10px solid rgba(255,255,255,0.2);border-top:10px solid #ffb400;border-radius:50%;width:100px;height:100px;animation:spin 1s linear infinite;margin-bottom:25px;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<h1>Free Fire Shop</h1>
+<p class="subtitle">[BETA]<br>Próx. Update: <b>12 de octubre del 2025</b></p>
+
+<h2>Recargas sin membresía</h2>
+<p>(Estas recargas se hacen dentro de tu cuenta de Free Fire)</p>
+<div class="shop" id="shopNormal">
+  <div class="card"><h3>💎 100 diamantes</h3><p>$1.75 <span class="no">[no disponible]</span></p><button disabled>Comprar</button></div>
+  <div class="card"><h3>💎 300 diamantes</h3><p>$3.99</p><button onclick="buy('300 diamantes','$3.99')">Comprar</button></div>
+  <div class="card"><h3>💎 500 diamantes</h3><p>$5.99</p><button onclick="buy('500 diamantes','$5.99')">Comprar</button></div>
+  <div class="card"><h3>💎 1,000 diamantes</h3><p>$12.50</p><button onclick="buy('1,000 diamantes','$12.50')">Comprar</button></div>
+  <div class="card"><h3>💎 2,180 diamantes</h3><p>$22.99</p><button onclick="buy('2,180 diamantes','$22.99')">Comprar</button></div>
+  <div class="card"><h3>💎 5,600 diamantes</h3><p>$53.99</p><button onclick="buy('5,600 diamantes','$53.99')">Comprar</button></div>
+</div>
+
+<h2>Membresías</h2>
+<p>(Con tu membresía se te harán tus recargas por ID)</p>
+<div class="shop" id="shopMembresias">
+  <div class="card"><h3>😪 5 días</h3><p>$2.99</p><button onclick="buy('Membresía 5 días','$2.99')">Suscribirse</button></div>
+  <div class="card"><h3>😸 8 días</h3><p>$3.99</p><button onclick="buy('Membresía 8 días','$3.99')">Suscribirse</button></div>
+  <div class="card"><h3>😺 12 días</h3><p>$4.99</p><button onclick="buy('Membresía 12 días','$4.99')">Suscribirse</button></div>
+  <div class="card"><h3>😼 16 días</h3><p>$6.99</p><button onclick="buy('Membresía 16 días','$6.99')">Suscribirse</button></div>
+</div>
+
+<div style="margin-top:60px;">
+  <h2>¿Ya tienes tu key?</h2>
+  <input type="text" id="keyInput" placeholder="Ingresa tu key">
+  <button class="verificar" onclick="verificarKey()">Verificar Key</button>
+  <div id="mensajeKey" class="message"></div>
+</div>
+
+<div id="shopKey" class="shop hidden" style="margin-top:50px;">
+  <div class="card"><h3>💎 110 diamantes</h3><p>$1.75 <span class="no">[no disponible]</span></p><button disabled>Comprar</button></div>
+  <div class="card"><h3>💎 331 diamantes</h3><p>$3.99</p><button onclick="buy('331 diamantes','$3.99')">Comprar</button></div>
+  <div class="card"><h3>💎 552 diamantes</h3><p>$5.99</p><button onclick="buy('552 diamantes','$5.99')">Comprar</button></div>
+  <div class="card"><h3>💎 1,166 diamantes</h3><p>$12.50</p><button onclick="buy('1,166 diamantes','$12.50')">Comprar</button></div>
+  <div class="card"><h3>💎 2,398 diamantes</h3><p>$22.99</p><button onclick="buy('2,398 diamantes','$22.99')">Comprar</button></div>
+  <div class="card"><h3>💎 6,160 diamantes</h3><p>$53.99</p><button onclick="buy('6,160 diamantes','$53.99')">Comprar</button></div>
+</div>
+
+<!-- Overlay -->
+<div id="overlay">
+  <div class="loader"></div>
+  <p>Procesando compra...</p>
+</div>
+
+<script>
+const keysValidas = ["AB123KEY","ANDZXKEY","KATHZX","NOHEMZXX","PROBLEMSKEY","KEYS2025","BROTHERSKEY","MITICKEY1"];
+function verificarKey(){
+  const input = document.getElementById("keyInput").value.trim().toUpperCase();
+  const mensaje = document.getElementById("mensajeKey");
+  const shopKey = document.getElementById("shopKey");
+  if(keysValidas.includes(input)){
+    mensaje.textContent = "KEY ACEPTADA 😁 GRACIAS POR TU COMPRA";
+    mensaje.className = "message key-ok";
+    shopKey.classList.remove("hidden");
+  } else {
+    mensaje.textContent = "Tu key no es válida 😾 intenta de nuevo";
+    mensaje.className = "message key-error";
+  }
+}
+function buy(item, price){
+  const overlay = document.getElementById("overlay");
+  overlay.style.display = "flex";
+  setTimeout(()=>{
+    const numero = "50373826693";
+    const texto = encodeURIComponent(`Hola 👋 quiero comprar ${item} de Free Fire por ${price}`);
+    window.location.href = `https://wa.me/${numero}?text=${texto}`;
+  },5000);
+}
+</script>
+
+</body>
+</html>
